@@ -35,7 +35,6 @@ Vagrant.configure("2") do |config|
   end
 
   # Storage Nodes
-  # file_to_disk = './tmp/large_disk.vdi'
   # TODO: change this to create 4 storage nodes when it works for 1.
   (1..1).each do |i|
     config.vm.define "storage-z#{i}" do |storage|
@@ -49,8 +48,12 @@ Vagrant.configure("2") do |config|
         v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
         v.customize ["modifyvm", :id, "--memory", 1024]
         v.customize ["modifyvm", :id, "--name", "storage-z#{i}"]
-        # v.customize ['createhd', '--filename', file_to_disk, '--size', 400 * 1024]
-        # v.customize ['storageattach', :id, '--storagectl', 'SATAController', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', file_to_disk]
+
+        (1..10).each do |j|
+          file_to_disk = "./tmp/storage-z#{i}-d#{j}.vdi"
+          v.customize ['createhd', '--filename', file_to_disk, '--size', 400 * 1024]
+          v.customize ['storageattach', :id, '--storagectl', 'SATAController', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', file_to_disk]
+        end
       end
     end
   end
