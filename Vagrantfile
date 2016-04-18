@@ -54,12 +54,25 @@ Vagrant.configure("2") do |config|
         v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
         v.customize ["modifyvm", :id, "--memory", 1024]
         v.customize ["modifyvm", :id, "--name", hostname]
+	v.customize ["storagectl", :id, "--name", "SATAController", "--portcount", 11]
 
         (1..10).each do |j|
           file_to_disk = "./tmp/#{hostname}-d#{j}.vdi"
-          v.customize ['createhd', '--filename', file_to_disk, '--size', 400 * 1024]
-          v.customize ['storageattach', :id, '--storagectl', 'SATAController', '--port', i, '--device', 0, '--type', 'hdd', '--medium', file_to_disk]
+          unless File.exist?(file_to_disk)
+            v.customize ['createhd', '--filename', file_to_disk, '--size', 400 * 1024]
+          end
         end
+        # TODO: figure out why this does not work in a loop...
+        v.customize ['storageattach', :id, '--storagectl', 'SATAController', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', "./tmp/#{hostname}-d1.vdi"]
+        v.customize ['storageattach', :id, '--storagectl', 'SATAController', '--port', 2, '--device', 0, '--type', 'hdd', '--medium', "./tmp/#{hostname}-d2.vdi"]
+        v.customize ['storageattach', :id, '--storagectl', 'SATAController', '--port', 3, '--device', 0, '--type', 'hdd', '--medium', "./tmp/#{hostname}-d3.vdi"]
+        v.customize ['storageattach', :id, '--storagectl', 'SATAController', '--port', 4, '--device', 0, '--type', 'hdd', '--medium', "./tmp/#{hostname}-d4.vdi"]
+        v.customize ['storageattach', :id, '--storagectl', 'SATAController', '--port', 5, '--device', 0, '--type', 'hdd', '--medium', "./tmp/#{hostname}-d5.vdi"]
+        v.customize ['storageattach', :id, '--storagectl', 'SATAController', '--port', 6, '--device', 0, '--type', 'hdd', '--medium', "./tmp/#{hostname}-d6.vdi"]
+        v.customize ['storageattach', :id, '--storagectl', 'SATAController', '--port', 7, '--device', 0, '--type', 'hdd', '--medium', "./tmp/#{hostname}-d7.vdi"]
+        v.customize ['storageattach', :id, '--storagectl', 'SATAController', '--port', 8, '--device', 0, '--type', 'hdd', '--medium', "./tmp/#{hostname}-d8.vdi"]
+        v.customize ['storageattach', :id, '--storagectl', 'SATAController', '--port', 9, '--device', 0, '--type', 'hdd', '--medium', "./tmp/#{hostname}-d9.vdi"]
+        v.customize ['storageattach', :id, '--storagectl', 'SATAController', '--port', 10, '--device', 0, '--type', 'hdd', '--medium', "./tmp/#{hostname}-d10.vdi"]
       end
     end
   end
