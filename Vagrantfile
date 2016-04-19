@@ -10,6 +10,7 @@ Vagrant.configure("2") do |config|
       proxy.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
       proxy.vm.box = "trusty64"
       proxy.vm.hostname = hostname
+      proxy.vm.synced_folder "salt/roots/", "/srv/salt/"
 
       proxy.vm.network :private_network, ip: "10.0.0.100"
       proxy.vm.network :forwarded_port, guest: 8080, host: 8080
@@ -18,6 +19,12 @@ Vagrant.configure("2") do |config|
         v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
         v.customize ["modifyvm", :id, "--memory", 1024]
         v.customize ["modifyvm", :id, "--name", hostname]
+      end
+      proxy.vm.provision :salt do |salt|
+        salt.masterless = true
+        salt.minion_config = "salt/minion"
+        salt.run_highstate = true
+        salt.bootstrap_options = '-F -c /tmp/ -P'
       end
     end
   end
