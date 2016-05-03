@@ -13,7 +13,6 @@ By default, the environment will contain:
 
 Since this creates multiple VMs, it is recommended you use a system with plenty of resources.   I am using a Intel i7 with 16 GB of RAM.
 
-
 Setup
 -----
 
@@ -47,3 +46,12 @@ Bringing machine 'storage-z3' up with 'virtualbox' provider...
 Bringing machine 'storage-z4' up with 'virtualbox' provider...
 ...
 ```
+
+Remaining Work
+--------------
+
+* TODO: Get initial environment running.
+* TODO: Add option to run hummingbird.
+* TODO: Add keystone node for authentication.
+* TODO: Add (optional) graphite node.
+* TODO: Add (optional) horizon node.
