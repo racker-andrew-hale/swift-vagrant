@@ -1,0 +1,61 @@
+#!/usr/bin/env python
+from __future__ import print_function
+
+try:
+    import yaml
+except ImportError:
+    raise ImportError('please pip install pyyaml')
+
+
+values = {
+    'general': {
+        'network': '10.0.0',
+    },
+    'lb': {
+        'host_port': 8080,
+    },
+    'proxy': {
+        'count': 2,
+    },
+    'storage': {
+        'count': 4,
+    }
+}
+
+
+prompts = [
+    ('general', 'network', 'str'),
+    ('lb', 'host_port', 'int'),
+    ('proxy', 'count', 'int'),
+    ('storage', 'count', 'int'),
+]
+
+
+def get_prompt(s, k):
+    prompt = ''
+    if s == 'proxy' or s == 'storage':
+        prompt = '{0} '.format(s)
+    prompt = '{0}{1}'.format(prompt, k)
+    return prompt
+
+
+def main():
+    print('generating local.yaml, leave blank to use the default value.\n')
+
+    # TODO: probalby should check for python3 and use 'input' if found.
+
+    for s, k, t in prompts:
+        prompt = get_prompt(s, k)
+        user_input = raw_input(
+            '{0} ({1}): '.format(prompt, values[s][k]))
+        if user_input != '':
+            if t == 'int':
+                user_input = int(user_input)
+            values[s][k] = user_input
+
+    with open('local.yaml', 'w') as outfile:
+        outfile.write(yaml.dump(values, default_flow_style=False))
+
+
+if __name__ == '__main__':
+    main()
