@@ -1,3 +1,0 @@
-xfsprogs:
-  pkg:
-    - installed
