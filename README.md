@@ -16,36 +16,10 @@ Since this creates multiple VMs, it is recommended you use a system with plenty 
 Setup
 -----
 
-First install the only python dependency
+Copy the example config to local.yaml and modify to your liking.
 
 ```shell
-$ pip install pyyaml
-```
-
-Once that is installed, you can run the config script
-
-```shell
-$ ./config
-generating local.yaml, leave blank to use the default value.
-
-network (10.0.0):
-host_port (8080):
-proxy count (2):
-storage count (4):
-```
-
-If you don't want to install pyyaml, you could manually create a local.yaml file similar to the following:
-
-```shell
-$ cat local.yaml
-general:
-  network: 10.0.0
-lb:
-  host_port: 8080
-proxy:
-  count: 2
-storage:
-  count: 4
+$ cp example.local.yaml local.yaml
 ```
 
 Now run Vagrant

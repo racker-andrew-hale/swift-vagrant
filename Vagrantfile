@@ -5,7 +5,8 @@ require 'yaml'
 # read local config values.
 local_config = 'local.yaml'
 if !File.exist?(local_config)
-    abort("local.yaml not found, please run: ./config")
+    STDERR.puts "local.yaml not found, creating one using example.local.yaml"
+    `cp example.local.yaml local.yaml`
 end
 settings = YAML.load_file local_config
 
