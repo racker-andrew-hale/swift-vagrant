@@ -1,10 +1,19 @@
 #!/usr/bin/env python
 from __future__ import print_function
 
+import sys
+
 try:
     import yaml
 except ImportError:
     raise ImportError('please pip install pyyaml')
+
+# Setup function for collecting input from the user.
+input_func = None
+if sys.version_info < (3, 0):
+    input_func = raw_input
+else:
+    input_func = input
 
 
 values = {
@@ -39,22 +48,26 @@ def get_prompt(s, k):
     return prompt
 
 
+def write_yaml(config):
+    # TODO: YAML isn't that hard, just write it by hand so that the
+    #       pyyaml dependency can be removed.
+    with open('local.yaml', 'w') as outfile:
+        outfile.write(yaml.dump(values, default_flow_style=False))
+
+
 def main():
     print('generating local.yaml, leave blank to use the default value.\n')
-
-    # TODO: probalby should check for python3 and use 'input' if found.
-
+    # TODO: read existing local.yaml if any, and populate defaults based
+    #       on it.
     for s, k, t in prompts:
         prompt = get_prompt(s, k)
-        user_input = raw_input(
+        user_input = input_func(
             '{0} ({1}): '.format(prompt, values[s][k]))
         if user_input != '':
             if t == 'int':
                 user_input = int(user_input)
             values[s][k] = user_input
-
-    with open('local.yaml', 'w') as outfile:
-        outfile.write(yaml.dump(values, default_flow_style=False))
+    write_yaml(values)
 
 
 if __name__ == '__main__':
