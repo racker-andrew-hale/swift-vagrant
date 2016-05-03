@@ -34,6 +34,20 @@ proxy count (2):
 storage count (4):
 ```
 
+If you don't want to install pyyaml, you could manually create a local.yaml file similar to the following:
+
+```shell
+$ cat local.yaml
+general:
+  network: 10.0.0
+lb:
+  host_port: 8080
+proxy:
+  count: 2
+storage:
+  count: 4
+```
+
 Now run Vagrant
 ```shell
 $ vagrant up
