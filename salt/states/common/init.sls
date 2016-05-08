@@ -16,3 +16,6 @@ common_pkgs:
       - python-netifaces
       - sqlite3
       - traceroute
+      - python-dev
+      - build-essential
+      - libffi-dev

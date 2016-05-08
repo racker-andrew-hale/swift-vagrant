@@ -1,0 +1,2 @@
+swift_hash_path_suffix: change_this
+swift_hash_path_prefix: and_change_this_too
