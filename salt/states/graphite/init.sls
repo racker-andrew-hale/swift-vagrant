@@ -2,101 +2,36 @@ include:
   - common
   - common.supervisor
 
-Django:
-  pip.installed:
-    - name: Django < 1.9
+graphite_python_pkgs:
+  pip:
+    - installed
     - require:
       - sls: common
+    - pkgs:
+      - Django < 1.9
+      - django-tagging
+      - pytz
+      - service_identity
+      - cairocffi
+      - gunicorn
+      - whisper
+      - carbon
+      - graphite-web
 
-django-tagging:
-  pip.installed:
-    - name: django-tagging
-    - require:
-      - pip: Django
-
-pytz:
-  pip.installed:
-    - name: pytz
-    - require:
-      - pip: django-tagging
-
-service_identity:
-  pip.installed:
-    - name: service_identity
-    - require:
-      - pip: pytz
-
-cairocffi:
-  pip.installed:
-    - name: cairocffi
-    - require:
-      - pip: service_identity
-
-gunicorn:
-  pip.installed:
-    - name: gunicorn
-    - require:
-      - pip: cairocffi
-
-whisper:
-  pip.installed:
-    - name: whisper
-    - require:
-      - pip: gunicorn
-
-carbon:
-  pip.installed:
-    - name: carbon
-    - require:
-      - pip: whisper
-
-graphite-web:
-  pip.installed:
-    - name: graphite-web
-    - require:
-      - pip: carbon
-
-/opt/graphite/conf/carbon.conf:
-  file.managed:
-    - source: salt://opt/graphite/conf/carbon.conf.jinja
+/opt/graphite/conf:
+  file.recurse:
+    - source: salt://opt/graphite/conf
     - user: root
     - group: root
-    - mode: 644
-    - require:
-      - pip: graphite-web
-
-/opt/graphite/conf/graph-templates.conf:
-  file.managed:
-    - source: salt://opt/graphite/conf/graph-templates.conf
-    - user: root
-    - group: root
-    - mode: 644
-    - require:
-      - pip: graphite-web
-
-/opt/graphite/conf/relay-rules.conf:
-  file.managed:
-    - source: salt://opt/graphite/conf/relay-rules.conf.jinja
-    - user: root
-    - group: root
-    - mode: 644
-    - require:
-      - pip: graphite-web
-
-/opt/graphite/conf/storage-schemas.conf:
-  file.managed:
-    - source: salt://opt/graphite/conf/storage-schemas.conf
-    - user: root
-    - group: root
-    - mode: 644
-    - require:
-      - pip: graphite-web
+    - file_mode: 644
+    - dir_mode: 755
+    - template: jinja
 
 /opt/graphite/webapp/graphite/graphite_wsgi.py:
   file.symlink:
     - target: /opt/graphite/conf/graphite.wsgi.example
     - require:
-      - pip: graphite-web
+      - pip: graphite_python_pkgs
 
 /opt/graphite/webapp/graphite/local_settings.py:
   file.managed:
@@ -106,7 +41,7 @@ graphite-web:
     - group: root
     - mode: 644
     - require:
-      - pip: graphite-web
+      - pip: graphite_python_pkgs
 
 initialize_sqlite:
   cmd:
@@ -150,7 +85,7 @@ initialize_sqlite:
       directory: /opt/graphite
     - require:
       - sls: common.supervisor
-      - file: /opt/graphite/conf/carbon.conf
+      - file: /opt/graphite/conf
   cmd.wait:
     - name: supervisorctl reload
     - watch:
