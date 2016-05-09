@@ -23,3 +23,4 @@ base:
   'roles:swift-proxy':
     - match: grain
     - swift.memcached
+    - swift.proxy

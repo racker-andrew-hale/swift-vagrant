@@ -3,7 +3,6 @@ memcached:
     - installed
     - skip_verify: True
 
-
 /etc/memcached.conf:
   file.managed:
     - source: salt://etc/memcached.conf.jinja
