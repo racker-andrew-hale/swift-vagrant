@@ -21,6 +21,8 @@ common_pkgs:
       - build-essential
       - libffi-dev
       - liberasurecode-dev
+      - libssl-dev
+      - openssl
 
 common_pip:
   pip:
@@ -32,3 +34,6 @@ common_pip:
     - pkgs:
       - pip
       - gitdb
+      - pyopenssl
+      - ndg-httpsclient
+      - pyasn1

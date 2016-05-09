@@ -2,9 +2,10 @@ include:
   - common
   - common.supervisor
 
-graphite_python_pkgs:
+graphite_python_deps:
   pip:
     - installed
+    - force_reinstall: true
     - require:
       - sls: common
     - pkgs:
@@ -15,8 +16,26 @@ graphite_python_pkgs:
       - cairocffi
       - gunicorn
       - whisper
-      - carbon
-      - graphite-web
+
+graphite-web:
+  pip:
+    - installed
+    - force_reinstall: true
+    - require:
+      - pip: graphite_python_deps
+    - install_options:
+      - --prefix=/opt/graphite
+      - --install-lib=/opt/graphite/webapp
+
+carbon:
+  pip:
+    - installed
+    - force_reinstall: true
+    - require:
+      - pip: graphite_python_deps
+    - install_options:
+      - --prefix=/opt/graphite
+      - --install-lib=/opt/graphite/lib
 
 /opt/graphite/conf:
   file.recurse:
@@ -26,12 +45,21 @@ graphite_python_pkgs:
     - file_mode: 644
     - dir_mode: 755
     - template: jinja
+    - require:
+      - pip: graphite-web
+
+/opt/graphite/webapp/graphite:
+  file.directory:
+    - exists: true
+    - makedirs: True
+    - require:
+      - pip: graphite-web
 
 /opt/graphite/webapp/graphite/graphite_wsgi.py:
   file.symlink:
     - target: /opt/graphite/conf/graphite.wsgi.example
     - require:
-      - pip: graphite_python_pkgs
+      - file: /opt/graphite/webapp/graphite
 
 /opt/graphite/webapp/graphite/local_settings.py:
   file.managed:
@@ -41,7 +69,7 @@ graphite_python_pkgs:
     - group: root
     - mode: 644
     - require:
-      - pip: graphite_python_pkgs
+      - pip: graphite-web
 
 initialize_sqlite:
   cmd:
