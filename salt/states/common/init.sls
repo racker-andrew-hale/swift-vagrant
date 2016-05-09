@@ -6,6 +6,7 @@ common_pkgs:
       - patch
       - curl
       - debconf
+      - git
       - gcc
       - ethtool
       - strace
@@ -19,3 +20,15 @@ common_pkgs:
       - python-dev
       - build-essential
       - libffi-dev
+      - liberasurecode-dev
+
+common_pip:
+  pip:
+    - installed
+    - reload_modules: True
+    - upgrade: true
+    - require:
+      - pkg: common_pkgs
+    - pkgs:
+      - pip
+      - gitdb
